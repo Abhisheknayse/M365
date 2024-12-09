@@ -1,0 +1,30 @@
+Import-Module ActiveDirectory
+$users = Import-Csv -Path "Y:\Abhishek Nayse\RITM1440269Job.csv"
+foreach ($user in $users) {
+Set-ADUser -Identity $user.SamAccountName -OU $user. /Externals/Fernando, Oliveira
+}
+
+
+
+
+CSV file format.
+SamAccountName,Title
+User1,Title1
+User2,Title2
+.
+.
+.
+
+
+
+# Import the Active Directory module
+Import-Module ActiveDirectory
+# Define the properties you want to retrieve
+
+$properties = @("Title", "SamAccountName", "Company", "Department")
+# Get the users and select the specified properties
+$users = Get-ADUser -Filter * -Property $properties | Select-Object $properties
+# Export the results to a CSV file
+$users | Export-Csv -Path "C:\Users\YourUsername\Documents\ADUsersInfo.csv" -NoTypeInformation
+# Output the results to the console
+$users
