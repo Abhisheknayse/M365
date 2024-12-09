@@ -1,0 +1,32 @@
+# Specify the path to your CSV file containing SAMAccountNames
+$csvFilePath = "C:\Abhishek Nayse\Audit_users.csv"
+# Read the CSV file and get the SAMAccountNames
+$samAccountNames = Import-Csv -Path $csvFilePath | Select-Object -ExpandProperty SamAccountName
+
+# Initialize an empty array to store UPNs
+$userUPNs = @()
+# Loop through each SAMAccountName and retrieve the UPN
+ foreach ($samAccountName in $samAccountNames) {
+     try {
+         $adUser = Get-ADUser -Identity $samAccountName -ErrorAction Stop
+         $userUPNs += [PSCustomObject]@{
+             SamAccountName = $adUser.SamAccountName
+             UPN            = $adUser.UserPrincipalName
+         }
+     } catch {
+         Write-Output "Error retrieving user with SAMAccountName '$samAccountName': $_"
+     }
+ }
+
+ # Export the results to a CSV file
+ $userUPNs | Export-Csv -Path "C:\Abhishek Nayse\Audit_users_output.csv" -NoTypeInformation
+
+ Write-Output "User UPNs exported to UPNs.csv"
+
+
+#------------------------------------------
+#CSV file format.
+#"SAMAccountName"
+#"User1"
+#"User2"
+#"User3"
